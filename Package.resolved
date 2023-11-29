@@ -30,11 +30,11 @@
       },
       {
         "package": "Plot",
-        "repositoryURL": "https://github.com/johnsundell/plot.git",
+        "repositoryURL": "https://github.com/alandeguz/plot.git",
         "state": {
           "branch": null,
-          "revision": "80612b34252188edbef280e5375e2fc5249ac770",
-          "version": "0.9.0"
+          "revision": "1e32d913251ab21a6d3f623e7aaccfd465253793",
+          "version": "0.14.1"
         }
       },
       {

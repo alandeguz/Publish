@@ -18,13 +18,13 @@ let package = Package(
     dependencies: [
         .package(
             name: "Ink",
-            url: "https://github.com/johnsundell/ink.git",
-            from: "0.2.0"
+            url: "https://github.com/alandeguz/ink.git",
+            from: "0.2.1"
         ),
         .package(
             name: "Plot",
-            url: "https://github.com/johnsundell/plot.git",
-            from: "0.9.0"
+            url: "https://github.com/alandeguz/plot.git",
+            from: "0.14.2"
         ),
         .package(
             name: "Files",

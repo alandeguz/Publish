@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/alandeguz/ink.git",
-            exact: "0.2.1"
+            exact: "0.6.1"
         ),
         .package(
             url: "https://github.com/alandeguz/plot.git",

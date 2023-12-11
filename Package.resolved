@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/ink.git",
       "state" : {
-        "revision" : "6a1015328e828573fa9d5a26f8fbb4e2c49e80bc",
-        "version" : "0.2.1"
+        "revision" : "872023ecadb5138d36d7b64be38b54b7a5faf0ff",
+        "version" : "0.6.1"
       }
     },
     {

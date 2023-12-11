@@ -24,7 +24,7 @@ let package = Package(
         .package(
             name: "Plot",
             url: "https://github.com/alandeguz/plot.git",
-            from: "0.14.2"
+            from: "0.14.3"
         ),
         .package(
             name: "Files",

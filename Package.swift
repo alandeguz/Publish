@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 
 /**
 *  Publish
@@ -17,37 +17,30 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "Ink",
-            url: "https://github.com/johnsundell/ink.git",
-            from: "0.2.0"
+            url: "https://github.com/alandeguz/ink.git",
+            revision: "a6e4728023c7f291c98474f95d4fd58d12866b66"
         ),
         .package(
-            name: "Plot",
-            url: "https://github.com/johnsundell/plot.git",
-            from: "0.9.0"
+            url: "https://github.com/alandeguz/plot.git",
+            revision: "617256defefac3462592fc460561347b5e6fd8b3"
         ),
         .package(
-            name: "Files",
             url: "https://github.com/johnsundell/files.git",
-            from: "4.0.0"
+            from: "4.2.0"
         ),
         .package(
-            name: "Codextended",
             url: "https://github.com/johnsundell/codextended.git",
             from: "0.1.0"
         ),
         .package(
-            name: "ShellOut",
             url: "https://github.com/johnsundell/shellout.git",
             from: "2.3.0"
         ),
         .package(
-            name: "Sweep",
             url: "https://github.com/johnsundell/sweep.git",
             from: "0.4.0"
         ),
         .package(
-            name: "CollectionConcurrencyKit",
             url: "https://github.com/johnsundell/collectionConcurrencyKit.git",
             from: "0.1.0"
         )
@@ -56,8 +49,13 @@ let package = Package(
         .target(
             name: "Publish",
             dependencies: [
-                "Ink", "Plot", "Files", "Codextended",
-                "ShellOut", "Sweep", "CollectionConcurrencyKit"
+                .product(name: "Ink", package: "ink"),
+                .product(name: "Plot", package: "plot"),
+                .product(name: "Files", package: "files"),
+                .product(name: "Codextended", package: "codextended"),
+                .product(name: "ShellOut", package: "shellout"),
+                .product(name: "Sweep", package: "sweep"),
+                .product(name: "CollectionConcurrencyKit", package: "collectionconcurrencykit")
             ]
         ),
         .executableTarget(

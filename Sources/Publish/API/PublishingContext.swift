@@ -299,6 +299,15 @@ internal extension PublishingContext {
             errorReason: .fileCopyingFailed
         )
     }
+    
+    func copyHiddenFileToOutput(_ file: File,
+                                targetFolderPath: Path?) throws {
+        try copyHiddenLocationToOutput(
+            file,
+            targetFolderPath: targetFolderPath,
+            errorReason: .fileCopyingFailed
+        )
+    }
 
     func copyFolderToOutput(_ folder: Folder,
                             targetFolderPath: Path?) throws {
@@ -355,6 +364,25 @@ private extension PublishingContext {
 
         do {
             try location.copy(to: targetFolder ?? folders.output)
+        } catch {
+            let path = Path(location.path(relativeTo: folders.root))
+            throw FileIOError(path: path, reason: errorReason)
+        }
+    }
+    
+    func copyHiddenLocationToOutput<T: Files.Location>(
+        _ location: T,
+        targetFolderPath: Path?,
+        errorReason: FileIOError.Reason
+    ) throws {
+        let targetFolder = (try targetFolderPath.map { try createOutputFolder(at: $0) }) ?? folders.output
+        do {
+            try location.copy(to: targetFolder)
+            if 
+                let file = location as? File,
+                let first = targetFolder.files.first(where: {$0.name == file.name}) {
+                try first.rename(to: "." + first.name)
+            }
         } catch {
             let path = Path(location.path(relativeTo: folders.root))
             throw FileIOError(path: path, reason: errorReason)

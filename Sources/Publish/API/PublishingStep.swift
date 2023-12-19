@@ -352,6 +352,24 @@ public extension PublishingStep {
             }
         }
     }
+    
+    static func copyHiddenFiles(
+        at originPath: Path,
+        to targetFolderPath: Path? = nil,
+        includingFolder includeFolder: Bool = false
+    ) -> Self {
+        step(named: "Copy and rename as hidden '\(originPath)' files") { context in
+            let folder = try context.folder(at: originPath)
+
+            
+            for file in folder.files {
+                try context.copyHiddenFileToOutput(
+                    file,
+                    targetFolderPath: targetFolderPath
+                )
+            }
+        }
+    }
 }
 
 // MARK: - Generation

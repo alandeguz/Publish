@@ -61,8 +61,14 @@ public extension Node where Context == HTML.DocumentContext {
                 return .rssFeedLink(path.absoluteString, title: title)
             }),
             .unwrap(location.imagePath ?? site.imagePath, { path in
-                let url = site.url(for: path)
+                let url: URL
+                if path.string.hasPrefix("http://") || path.string.hasPrefix("https://") {
+                    url = URL(string: path.string) ?? site.url(for: path)
+                } else {
+                    url = site.url(for: path)
+                }
                 return .socialImageLink(url)
+
             })
         )
     }

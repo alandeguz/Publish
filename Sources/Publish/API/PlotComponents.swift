@@ -9,7 +9,10 @@ import Plot
 import Ink
 import Sweep
 
+let iso = ISO8601DateFormatter()
+
 // MARK: - Nodes and Attributes
+
 
 public extension Node where Context == HTML.DocumentContext {
     /// Add an HTML `<head>` tag within the current context, based
@@ -52,6 +55,14 @@ public extension Node where Context == HTML.DocumentContext {
             .url(site.url(for: location)),
             .title(title),
             .description(description),
+            .meta(.name("date"), .content(iso.string(from: location.date))),
+            .meta(.property("article:published_time"), .content(iso.string(from: location.date))),
+            .if(location.lastModified != location.date,
+                .meta(.name("last-modified"), .content(iso.string(from: location.lastModified)))
+            ),
+            .if(location.lastModified != location.date,
+                .meta(.property("article:modified_time"), .content(iso.string(from: location.lastModified)))
+            ),
             .twitterCardType(location.imagePath == nil ? .summary : .summaryLargeImage),
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),

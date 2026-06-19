@@ -63,7 +63,7 @@ private extension MarkdownContentFactory {
         let title = try decoder.decodeIfPresent("title", as: String.self)
         let description = try decoder.decodeIfPresent("description", as: String.self)
         let date = try resolvePublishingDate(fromFile: file, decoder: decoder)
-        let lastModified = file.modificationDate ?? date
+        let lastModified = try decoder.decodeIfPresent("last-modified", as: Date.self) ?? file.modificationDate ?? date
         let imagePath = try decoder.decodeIfPresent("image", as: Path.self)
         let audio = try decoder.decodeIfPresent("audio", as: Audio.self)
         let video = try decoder.decodeIfPresent("video", as: Video.self)

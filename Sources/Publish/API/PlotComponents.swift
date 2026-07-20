@@ -51,10 +51,12 @@ public extension Node where Context == HTML.DocumentContext {
             description = site.description
         }
 
+        let item = location as? Item<T>
+
         return .head(
             .encoding(.utf8),
             .siteName(site.name),
-            .ogType(location is Item<T> ? "article" : "website"),
+            .ogType(item == nil ? "website" : "article"),
             .unwrap(site.locale) {
                 .ogLocale($0.identifier)
             },
@@ -69,6 +71,9 @@ public extension Node where Context == HTML.DocumentContext {
             .if(location.lastModified != location.date,
                 .meta(.property("article:modified_time"), .content(iso.string(from: location.lastModified)))
             ),
+            .unwrap(item) { item in
+                item.generateArticleHeadNodes(site: site)
+            },
             .twitterCardType(location.imagePath == nil ? .summary : .summaryLargeImage),
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),
@@ -336,4 +341,20 @@ public extension FaviconSet {
             }
         )
     }
+}
+
+public extension Item {
+    
+    func generateArticleHeadNodes(site: Site) -> Node<HTML.HeadContext> {
+        .group(
+                .meta(.property("article:section"), .content(sectionID.rawValue)),
+                .forEach(tags) { tag in
+                    .meta(.property("article:tag"), .content(tag.string))
+                },
+                .unwrap(site.authorPath) { path in
+                    .meta(.property("article:author"), .content(site.url(for: path).absoluteString))
+                }
+            )
+    }
+    
 }

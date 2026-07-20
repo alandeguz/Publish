@@ -12,6 +12,17 @@ import Sweep
 
 let iso = ISO8601DateFormatter()
 
+private extension Language {
+    /// A best-effort conversion of this language into an Open Graph locale
+    /// string (e.g. "en_US"). Note this is only an approximation, since
+    /// `Language` encodes ISO 639 language codes and not full locales.
+    var ogLocale: String {
+        let parts = rawValue.split(separator: "-")
+        guard parts.count == 2 else { return rawValue }
+        return "\(parts[0])_\(parts[1].uppercased())"
+    }
+}
+
 // MARK: - Nodes and Attributes
 
 
@@ -53,6 +64,8 @@ public extension Node where Context == HTML.DocumentContext {
         return .head(
             .encoding(.utf8),
             .siteName(site.name),
+            .ogType(location is Item<T> ? "article" : "website"),
+            .ogLocale(site.language.ogLocale),
             .url(site.url(for: location)),
             .title(title),
             .description(description),

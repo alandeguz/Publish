@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -38,6 +39,8 @@ public protocol Website {
     var imagePath: Path? { get }
     /// The website's favicon, if any.
     var favicon: Favicon? { get }
+    /// The website's favicon extended, if any.
+    var faviconSet: FaviconSet? { get }
     /// The configuration to use when generating tag HTML for the website.
     /// If this is `nil`, then no tag HTML will be generated.
     var tagHTMLConfig: TagHTMLConfiguration? { get }
@@ -47,6 +50,7 @@ public protocol Website {
 
 public extension Website {
     var favicon: Favicon? { .init() }
+    var faviconSet: FaviconSet? { .init() }
     var tagHTMLConfig: TagHTMLConfiguration? { .default }
 }
 

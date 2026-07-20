@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -67,6 +68,7 @@ public extension Node where Context == HTML.DocumentContext {
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),
             .unwrap(site.favicon, { .favicon($0) }),
+            .unwrap(site.faviconSet, { $0.headNodes }),
             .unwrap(rssFeedPath, { path in
                 let title = rssFeedTitle ?? "Subscribe to \(site.name)"
                 return .rssFeedLink(path.absoluteString, title: title)
@@ -298,6 +300,35 @@ public struct VideoPlayer: Component {
                 "gyroscope",
                 "picture-in-picture"
             ]
+        )
+    }
+}
+
+public extension FaviconSet {
+    /// All `<link>` nodes needed to declare this favicon set in an HTML `<head>`.
+    var headNodes: Node<HTML.HeadContext> {
+        .group(
+            .unwrap(ico) {
+                .link(
+                    .rel(.icon),
+                    .href($0.absoluteString),
+                    .attribute(named: "sizes", value: "any")
+                )
+            },
+            .unwrap(svg) {
+                .link(
+                    .rel(.icon),
+                    .href($0.absoluteString),
+                    .type("image/svg+xml")
+                )
+            },
+            .unwrap(appleTouchIcon) {
+                .link(
+                    .rel(.appleTouchIcon),
+                    .href($0.path.string),
+                    .attribute(named: "sizes", value: "\($0.size)x\($0.size)")
+                )
+            }
         )
     }
 }

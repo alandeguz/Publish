@@ -35,6 +35,8 @@ public protocol Website {
     var description: String { get }
     /// The website's primary language.
     var language: Language { get }
+    /// The website's primary locale.
+    var locale: Locale? { get }
     /// Any path to an image that represents the website.
     var imagePath: Path? { get }
     /// The website's favicon, if any.

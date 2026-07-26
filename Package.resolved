@@ -56,10 +56,10 @@
     {
       "identity" : "sweep",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/sweep.git",
+      "location" : "https://github.com/alandeguz/sweep.git",
       "state" : {
-        "revision" : "801c2878e4c6c5baf32fe132e1f3f3af6f9fd1b0",
-        "version" : "0.4.0"
+        "revision" : "e7f90cb881abb24596417227e463d4c5f82d5a5a",
+        "version" : "0.5.0"
       }
     }
   ],

@@ -37,8 +37,8 @@ let package = Package(
             from: "2.3.0"
         ),
         .package(
-            url: "https://github.com/johnsundell/sweep.git",
-            from: "0.4.0"
+            url: "https://github.com/alandeguz/sweep.git",
+            from: "0.5.0"
         ),
         .package(
             url: "https://github.com/johnsundell/collectionConcurrencyKit.git",

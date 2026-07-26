@@ -74,7 +74,7 @@ public extension Node where Context == HTML.DocumentContext {
             .unwrap(item) { item in
                 item.generateArticleHeadNodes(site: site)
             },
-            .twitterCardType(location.imagePath == nil ? .summary : .summaryLargeImage),
+            .twitterCardType((location.imagePath ?? site.imagePath) == nil ? .summary : .summaryLargeImage),
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),
             .unwrap(site.favicon, { .favicon($0) }),

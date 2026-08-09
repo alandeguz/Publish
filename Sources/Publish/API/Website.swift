@@ -43,6 +43,8 @@ public protocol Website {
     /// used to populate `article:author` for item pages. Only meaningful
     /// for single/primary-author sites; leave `nil` to omit the tag.
     var authorPath: Path? { get }
+    /// The humans.txt file definition, if any
+    var humansFile: HumansFile? { get }
     /// The website's favicon, if any.
     var favicon: Favicon? { get }
     /// The website's favicon extended, if any.

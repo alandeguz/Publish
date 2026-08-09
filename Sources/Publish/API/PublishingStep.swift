@@ -375,6 +375,16 @@ public extension PublishingStep {
 // MARK: - Generation
 
 public extension PublishingStep {
+    /// Generate a humans.txt file for the website.
+    /// - parameter originPath: The path that the resource folder is located at.
+    static func generateHumansFile() -> Self {
+        step(named: #function) { context in
+            guard let data = context.site.humansFile else { return }
+            let hfile = try context.createOutputFile(at: "humans.txt")
+            try hfile.write(data.render())
+        }
+    }
+    
     /// Generate the website's HTML using a given theme.
     /// - parameter theme: The theme to use to generate the website's HTML.
     /// - parameter indentation: How each HTML file should be indented.

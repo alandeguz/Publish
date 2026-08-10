@@ -40,8 +40,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/plot.git",
       "state" : {
-        "branch" : "ad07",
-        "revision" : "56677096e4eec3dc8564b4ec5cb53acac1d8875a"
+        "branch" : "ad08",
+        "revision" : "6268cd50e3d9ea749ab8ba0589cd54d0d054180a"
       }
     },
     {

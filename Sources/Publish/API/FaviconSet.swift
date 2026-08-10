@@ -1,7 +1,6 @@
 /**
 *  Publish
 *  Copyright (c) Alan DeGuzman 2026
-*  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 

@@ -22,7 +22,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/alandeguz/plot.git",
-            branch: "ad08"
+            branch: "ad09"
         ),
         .package(
             url: "https://github.com/johnsundell/files.git",

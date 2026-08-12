@@ -39,10 +39,14 @@ public protocol Website {
     var locale: Locale? { get }
     /// Any path to an image that represents the website.
     var imagePath: Path? { get }
+    /// The website's theme color, if any.
+    var themeColor: String? { get }
     /// The path to a page representing this website's default author,
     /// used to populate `article:author` for item pages. Only meaningful
     /// for single/primary-author sites; leave `nil` to omit the tag.
     var authorPath: Path? { get }
+    /// The website's Twitter handle, typically starting with '@'
+    var twitterUsername: String? { get}
     /// The website's favicon, if any.
     var favicon: Favicon? { get }
     /// The website's favicon extended, if any.

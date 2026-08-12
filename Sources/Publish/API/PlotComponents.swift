@@ -74,6 +74,12 @@ public extension Node where Context == HTML.DocumentContext {
             .unwrap(item) { item in
                 item.generateArticleHeadNodes(site: site)
             },
+            .unwrap(site.themeColor) {
+                .themeColor($0)
+            },
+            .unwrap(site.twitterUsername) {
+                .twitterUsername($0)
+            },
             .twitterCardType((location.imagePath ?? site.imagePath) == nil ? .summary : .summaryLargeImage),
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),

@@ -1,40 +1,36 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Testing
 import Publish
 import Plot
 import Files
 
 final class HTMLGenerationTests: PublishTestCase {
-    private var htmlFactory: HTMLFactoryMock<WebsiteStub.WithoutItemMetadata>!
+    private var htmlFactory = HTMLFactoryMock<WebsiteStub.WithoutItemMetadata>()
 
-    override func setUp() {
-        super.setUp()
-        htmlFactory = HTMLFactoryMock()
-    }
-
-    func testGeneratingIndexHTML() throws {
+    @Test func `Generating Index HTML`() async throws {
         htmlFactory.makeIndexHTML = { content, _ in
             HTML(.body(.text(content.title)))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             content: ["index.md": "# Hello, world!"],
             expectedHTML: ["index.html": "Hello, world!"]
         )
     }
 
-    func testGeneratingSectionHTML() throws {
+    @Test func `Generating Section HTML`() async throws {
         htmlFactory.makeSectionHTML = { section, _ in
             HTML(.body(.text(section.title)))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             content: [
                 "one/index.md": "# Section 1",
@@ -47,7 +43,7 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testGeneratingItemHTML() throws {
+    @Test func `Generating Item HTML`() async throws {
         htmlFactory.makeItemHTML = { item, _ in
             HTML(.body(
                 .unwrap(item.audio?.url, { .text($0.absoluteString) }),
@@ -56,7 +52,7 @@ final class HTMLGenerationTests: PublishTestCase {
             ))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             content: [
                 "one/a.md": """
@@ -79,12 +75,12 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testGeneratingNestedItemHTML() throws {
+    @Test func `Generating Nested Item HTML`() async throws {
         htmlFactory.makeItemHTML = { item, _ in
             HTML(.body(.text(item.title)))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             content: [
                 "one/2019/12/a.md": """
@@ -101,12 +97,12 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testGeneratingPageHTML() throws {
+    @Test func `Generating Page HTML`() async throws {
         htmlFactory.makePageHTML = { page, _ in
             HTML(.body(.text(page.title)))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             content: [
                 "page1.md": "# Page 1",
@@ -126,7 +122,7 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testGeneratingTagHTML() throws {
+    @Test func `Generating Tag HTML`() async throws {
         htmlFactory.makeTagListHTML = { page, _ in
             HTML(.body(.ul(
                 .forEach(page.tags.sorted()) {
@@ -139,7 +135,7 @@ final class HTMLGenerationTests: PublishTestCase {
             HTML(.body(.text(page.tag.string)))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             content: [
                 "one/a.md": """
@@ -166,14 +162,14 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testCleaningUpOldHTMLFiles() throws {
+    @Test func `Cleaning Up Old HTML Files`() async throws {
         htmlFactory.makePageHTML = { page, _ in
             HTML(.body(.text(page.title)))
         }
 
         let folder = try Folder.createTemporary()
 
-        try publishWebsite(
+        try await publishWebsite(
             in: folder,
             using: Theme(htmlFactory: htmlFactory),
             content: [
@@ -184,7 +180,7 @@ final class HTMLGenerationTests: PublishTestCase {
             ]
         )
 
-        try publishWebsite(
+        try await publishWebsite(
             in: folder,
             using: Theme(htmlFactory: htmlFactory),
             content: [
@@ -196,12 +192,12 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testAlwaysGeneratingIndexPageForAllSections() throws {
+    @Test func `Always Generating Index Page For All Sections`() async throws {
         htmlFactory.makeSectionHTML = { section, _ in
             HTML(.body(.text(section.id.rawValue)))
         }
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             expectedHTML: [
                 "one/index.html": "one",
@@ -213,11 +209,11 @@ final class HTMLGenerationTests: PublishTestCase {
     }
     
 
-    func testNotGeneratingTagHTMLForIncompatibleTheme() throws {
+    @Test func `Not Generating Tag HTML For Incompatible Theme`() async throws {
         htmlFactory.makeTagListHTML = nil
         htmlFactory.makeTagDetailsHTML = nil
 
-        try publishWebsite(
+        try await publishWebsite(
             using: Theme(htmlFactory: htmlFactory),
             additionalSteps: [
                 .addItem(Item.stub(withPath: "item").setting(\.tags, to: ["tag"]))
@@ -234,11 +230,11 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testNotGeneratingTagHTMLWhenDisabled() throws {
+    @Test func `Not Generating Tag HTML When Disabled`() async throws {
         let site = WebsiteStub.WithoutItemMetadata()
         site.tagHTMLConfig = nil
 
-        try publishWebsite(site,
+        try await publishWebsite(site,
             using: Theme(htmlFactory: htmlFactory),
             additionalSteps: [
                 .addItem(Item.stub(withPath: "item").setting(\.tags, to: ["tag"]))
@@ -255,11 +251,11 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testGeneratingStandAloneHTMLFiles() throws {
+    @Test func `Generating Stand Alone HTML Files`() async throws {
         let folder = try Folder.createTemporary()
         let theme = Theme(htmlFactory: htmlFactory)
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .addItem(Item.stub(withPath: "item").setting(\.tags, to: ["tag"])),
             .addItem(Item.stub(withPath: "rawValueItem", sectionID: .customRawValue).setting(\.tags, to: ["tag"])),
             .generateHTML(withTheme: theme, fileMode: .standAloneFiles)
@@ -282,10 +278,10 @@ final class HTMLGenerationTests: PublishTestCase {
         )
     }
 
-    func testFoundationTheme() throws {
+    @Test func `Foundation Theme`() async throws {
         let folder = try Folder.createTemporary()
 
-        try publishWebsite(
+        try await publishWebsite(
             in: folder,
             using: [
                 .addMarkdownFiles(),
@@ -304,23 +300,23 @@ final class HTMLGenerationTests: PublishTestCase {
         )
 
         let siteIndex = try folder.file(at: "Output/index.html")
-        XCTAssertTrue(try siteIndex.readAsString().contains("WebsiteName"))
+        #expect(try siteIndex.readAsString().contains("WebsiteName"))
 
         let sectionIndex = try folder.file(at: "Output/one/index.html")
-        XCTAssertTrue(try sectionIndex.readAsString().contains("SectionTitle"))
+        #expect(try sectionIndex.readAsString().contains("SectionTitle"))
 
         let item = try folder.file(at: "Output/one/item/index.html")
-        XCTAssertTrue(try item.readAsString().contains("ItemTitle"))
+        #expect(try item.readAsString().contains("ItemTitle"))
 
         let page = try folder.file(at: "Output/page/index.html")
-        XCTAssertTrue(try page.readAsString().contains("PageTitle"))
+        #expect(try page.readAsString().contains("PageTitle"))
 
         let tagList = try folder.file(at: "Output/tags/index.html")
         let tagListHTML = try tagList.readAsString()
-        XCTAssertTrue(tagListHTML.contains("tagA"))
-        XCTAssertTrue(tagListHTML.contains("tagB"))
+        #expect(tagListHTML.contains("tagA"))
+        #expect(tagListHTML.contains("tagB"))
 
         let tagDetails = try folder.file(at: "Output/tags/taga/index.html")
-        XCTAssertTrue(try tagDetails.readAsString().contains("tagA"))
+        #expect(try tagDetails.readAsString().contains("tagA"))
     }
 }

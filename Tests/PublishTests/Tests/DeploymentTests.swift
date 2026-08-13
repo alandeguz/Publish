@@ -1,47 +1,35 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Foundation
+import Testing
 import Publish
 import Files
 import ShellOut
 
 final class DeploymentTests: PublishTestCase {
-    private var defaultCommandLineArguments: [String]!
-
-    override func setUp() {
-        super.setUp()
-        defaultCommandLineArguments = CommandLine.arguments
-    }
-
-    override func tearDown() {
-        CommandLine.arguments = defaultCommandLineArguments
-        super.tearDown()
-    }
-
-    func testDeploymentSkippedByDefault() throws {
+    @Test func `Deployment Skipped By Default`() async throws {
         var deployed = false
 
-        try publishWebsite(using: [
+        try await publishWebsite(using: [
             .step(named: "Custom") { _ in },
             .deploy(using: DeploymentMethod(name: "Deploy") { _ in
                 deployed = true
             })
         ])
 
-        XCTAssertFalse(deployed)
+        #expect(!(deployed))
     }
 
-    func testGenerationStepsAndPluginsSkippedWhenDeploying() throws {
-        CommandLine.arguments.append("--deploy")
-
+    @Test func `Generation Steps And Plugins Skipped When Deploying`() async throws {
         var generationPerformed = false
         var pluginInstalled = false
 
-        try publishWebsite(using: [
+        try await publishWebsite(using: [
             .step(named: "Skipped") { _ in
                 generationPerformed = true
             },
@@ -49,13 +37,13 @@ final class DeploymentTests: PublishTestCase {
                 pluginInstalled = true
             }),
             .deploy(using: DeploymentMethod(name: "Deploy") { _ in })
-        ])
+        ], deploy: true)
 
-        XCTAssertFalse(generationPerformed)
-        XCTAssertFalse(pluginInstalled)
+        #expect(!(generationPerformed))
+        #expect(!(pluginInstalled))
     }
 
-    func testGitDeploymentMethod() throws {
+    @Test func `Git Deployment Method`() async throws {
         let container = try Folder.createTemporary()
         let remote = try container.createSubfolder(named: "Remote.git")
         let repo = try container.createSubfolder(named: "Repo")
@@ -68,22 +56,20 @@ final class DeploymentTests: PublishTestCase {
         ], at: remote.path)
 
         // First generate
-        try publishWebsite(in: repo, using: [
+        try await publishWebsite(in: repo, using: [
             .generateHTML(withTheme: .foundation)
         ])
 
         // Then deploy
-        CommandLine.arguments.append("--deploy")
-
-        try publishWebsite(in: repo, using: [
+        try await publishWebsite(in: repo, using: [
             .deploy(using: .git(remote.path))
-        ])
+        ], deploy: true)
 
         let indexFile = try remote.file(named: "index.html")
-        XCTAssertFalse(try indexFile.readAsString().isEmpty)
+        #expect(!(try indexFile.readAsString().isEmpty))
     }
 
-	func testGitDeploymentMethodWithError() throws {
+	@Test func `Git Deployment Method With Error`() async throws {
         let container = try Folder.createTemporary()
         let remote = try container.createSubfolder(named: "Remote.git")
         let repo = try container.createSubfolder(named: "Repo")
@@ -98,19 +84,18 @@ final class DeploymentTests: PublishTestCase {
         )
         
         // First generate
-        try publishWebsite(in: repo, using: [
+        try await publishWebsite(in: repo, using: [
             .generateHTML(withTheme: .foundation)
         ])
 
         // Then deploy
-        CommandLine.arguments.append("--deploy")
-
         var thrownError: PublishingError?
 
         do {
-            try publishWebsite(
+            try await publishWebsite(
                 in: repo,
-                using: [.deploy(using: .git(remote.path))]
+                using: [.deploy(using: .git(remote.path))],
+                deploy: true
             )
         } catch {
             thrownError = error as? PublishingError
@@ -119,16 +104,16 @@ final class DeploymentTests: PublishTestCase {
         // We don't want to make too many assumptions about the way
         // Git phrases its error messages here, so we just perform
         // a few basic checks to make sure we have some form of output:
-        let infoMessage = try require(thrownError?.infoMessage)
-        XCTAssertTrue(infoMessage.contains("receive.denyCurrentBranch"))
-        XCTAssertTrue(infoMessage.contains("[remote rejected]"))
+        let infoMessage = try #require(thrownError?.infoMessage)
+        #expect(infoMessage.contains("receive.denyCurrentBranch"))
+        #expect(infoMessage.contains("[remote rejected]"))
     }
 
-    func testDeployingUsingCustomOutputFolder() throws {
+    @Test func `Deploying Using Custom Output Folder`() async throws {
         let container = try Folder.createTemporary()
 
         // First generate
-        try publishWebsite(in: container, using: [
+        try await publishWebsite(in: container, using: [
             .addMarkdownFiles(),
             .generateHTML(withTheme: .foundation)
         ], content: [
@@ -136,11 +121,9 @@ final class DeploymentTests: PublishTestCase {
         ])
 
         // Then deploy
-        CommandLine.arguments.append("--deploy")
-
         var outputFolder: Folder?
 
-        try publishWebsite(in: container, using: [
+        try await publishWebsite(in: container, using: [
             .deploy(using: DeploymentMethod(name: "Test") { context in
                 outputFolder = try context.createDeploymentFolder(
                     withPrefix: "Test",
@@ -148,10 +131,10 @@ final class DeploymentTests: PublishTestCase {
                     configure: { _ in }
                 )
             })
-        ])
+        ], deploy: true)
 
-        let folder = try require(outputFolder)
+        let folder = try #require(outputFolder)
         let subfolder = try folder.subfolder(named: "CustomOutput")
-        XCTAssertTrue(subfolder.containsSubfolder(at: "one/a"))
+        #expect(subfolder.containsSubfolder(at: "one/a"))
     }
 }

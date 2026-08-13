@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -79,7 +80,7 @@ private extension PodcastFeedGenerator {
             ),
             .type(config.type),
             .image(config.imageURL),
-            .group(await items.concurrentMap { item in
+            .group(await items.asyncMap { item in
                 guard let audio = item.audio else {
                     throw PodcastError(path: item.path, reason: .missingAudio)
                 }

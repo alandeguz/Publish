@@ -1,16 +1,18 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Foundation
+import Testing
 import Publish
 
 final class ErrorTests: PublishTestCase {
-    func testErrorForInvalidRootPath() throws {
-        assertErrorThrown(
-            try WebsiteStub.WithoutItemMetadata().publish(
+    @Test func `Error For Invalid Root Path`() async throws {
+        await assertErrorThrown(
+            try await WebsiteStub.WithoutItemMetadata().publish(
                 at: "🤷‍♂️",
                 using: []
             ),
@@ -21,7 +23,7 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForMissingMarkdownMetadata() throws {
+    @Test func `Error For Missing Markdown Metadata`() async throws {
         struct Metadata: WebsiteItemMetadata {
             let string: String
         }
@@ -32,8 +34,8 @@ final class ErrorTests: PublishTestCase {
         ---
         """
 
-        assertErrorThrown(
-            try generateItem(
+        await assertErrorThrown(
+            try await generateItem(
                 withMetadataType: Metadata.self,
                 in: .one,
                 fromMarkdown: markdown,
@@ -47,15 +49,15 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForInvalidMarkdownMetadata() throws {
+    @Test func `Error For Invalid Markdown Metadata`() async throws {
         let markdown = """
         ---
-        audio.url: 🤷‍♂️
+        audio.url: https://[
         ---
         """
 
-        assertErrorThrown(
-            try generateItem(
+        await assertErrorThrown(
+            try await generateItem(
                 in: .one,
                 fromMarkdown: markdown,
                 fileName: "file.md"
@@ -68,13 +70,13 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForThrowingDuringItemMutation() throws {
+    @Test func `Error For Throwing During Item Mutation`() async throws {
         struct Error: LocalizedError {
             var errorDescription: String? { "An error" }
         }
 
-        assertErrorThrown(
-            try publishWebsite(using: [
+        await assertErrorThrown(
+            try await publishWebsite(using: [
                 .addItem(.stub(withPath: "path/to/item")),
                 .mutateAllItems { _ in
                     throw Error()
@@ -89,9 +91,9 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForMissingPage() throws {
-        assertErrorThrown(
-            try publishWebsite(using: [
+    @Test func `Error For Missing Page`() async throws {
+        await assertErrorThrown(
+            try await publishWebsite(using: [
                 .mutatePage(at: "invalid/path") { _ in }
             ]),
             PublishingError(
@@ -102,13 +104,13 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForThrowingDuringPageMutation() throws {
+    @Test func `Error For Throwing During Page Mutation`() async throws {
         struct Error: LocalizedError {
             var errorDescription: String? { "An error" }
         }
 
-        assertErrorThrown(
-            try publishWebsite(using: [
+        await assertErrorThrown(
+            try await publishWebsite(using: [
                 .addPage(.stub(withPath: "page")),
                 .mutateAllPages { _ in
                     throw Error()
@@ -123,9 +125,9 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForMissingFolder() throws {
-        assertErrorThrown(
-            try publishWebsite(using: [
+    @Test func `Error For Missing Folder`() async throws {
+        await assertErrorThrown(
+            try await publishWebsite(using: [
                 .copyFiles(at: "non/existing")
             ]),
             PublishingError(
@@ -136,9 +138,9 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForMissingFile() throws {
-        assertErrorThrown(
-            try publishWebsite(using: [
+    @Test func `Error For Missing File`() async throws {
+        await assertErrorThrown(
+            try await publishWebsite(using: [
                 .copyFile(at: "non/existing.png")
             ]),
             PublishingError(
@@ -149,23 +151,13 @@ final class ErrorTests: PublishTestCase {
         )
     }
 
-    func testErrorForNoPublishingSteps() throws {
-        assertErrorThrown(
-            try publishWebsite(using: []),
+    @Test func `Error For No Publishing Steps`() async throws {
+        await assertErrorThrown(
+            try await publishWebsite(using: []),
             PublishingError(
                 infoMessage: "WebsiteName has no generation steps."
             )
         )
 
-        CommandLine.arguments.append("--deploy")
-
-        assertErrorThrown(
-            try publishWebsite(using: []),
-            PublishingError(
-                infoMessage: "WebsiteName has no deployment steps."
-            )
-        )
-
-        CommandLine.arguments.removeLast()
     }
 }

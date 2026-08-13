@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -193,7 +194,7 @@ public extension PublishingStep {
         return step(named: stepName) { context in
             for section in sections {
                 try await context.sections[section].replaceItems(
-                    with: context.sections[section].items.concurrentMap { item in
+                    with: context.sections[section].items.asyncMap { item in
                         guard predicate.matches(item) else {
                             return item
                         }

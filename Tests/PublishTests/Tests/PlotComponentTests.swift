@@ -1,16 +1,18 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Foundation
+import Testing
 import Publish
 import Plot
 import Ink
 
 final class PlotComponentTests: PublishTestCase {
-    func testStylesheetPaths() {
+    @Test func `Stylesheet Paths`() {
         let html = Node.head(
             for: Page(path: "path", content: Content()),
             on: WebsiteStub.WithoutItemMetadata(),
@@ -30,59 +32,59 @@ final class PlotComponentTests: PublishTestCase {
         ]
 
         for url in expectedURLs {
-            XCTAssertTrue(html.contains("""
-            <link rel="stylesheet" href="\(url)" type="text/css"/>
+            #expect(html.contains("""
+            <link rel="stylesheet" href="\(url)" type="text/css">
             """))
         }
     }
 
-    func testRenderingAudioPlayer() throws {
-        let url = try require(URL(string: "https://audio.mp3"))
+    @Test func `Rendering Audio Player`() throws {
+        let url = try #require(URL(string: "https://audio.mp3"))
         let audio = Audio(url: url, format: .mp3)
         let html = Node.audioPlayer(for: audio).render()
 
-        XCTAssertEqual(html, """
-        <audio controls><source type="audio/mpeg" src="https://audio.mp3"/></audio>
-        """)
+        #expect((html) == ("""
+        <audio controls><source type="audio/mpeg" src="https://audio.mp3"></audio>
+        """))
     }
 
-    func testRenderingHostedVideoPlayer() throws {
-        let url = try require(URL(string: "https://video.mp4"))
+    @Test func `Rendering Hosted Video Player`() throws {
+        let url = try #require(URL(string: "https://video.mp4"))
         let video = Video.hosted(url: url, format: .mp4)
         let html = Node.videoPlayer(for: video).render()
 
-        XCTAssertEqual(html, """
-        <video controls><source type="video/mp4" src="https://video.mp4"/></video>
-        """)
+        #expect((html) == ("""
+        <video controls><source type="video/mp4" src="https://video.mp4"></video>
+        """))
     }
 
-    func testRenderingYouTubeVideoPlayer() {
+    @Test func `Rendering You Tube Video Player`() {
         let video = Video.youTube(id: "123")
         let html = Node.videoPlayer(for: video).render()
 
-        XCTAssertEqual(html, """
+        #expect((html) == ("""
         <iframe src="https://www.youtube-nocookie.com/embed/123"\
          frameborder="0"\
-         allowfullscreen="true"\
+         allowfullscreen\
          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"\
         ></iframe>
-        """)
+        """))
     }
 
-    func testRenderingVimeoVideoPlayer() {
+    @Test func `Rendering Vimeo Video Player`() {
         let video = Video.vimeo(id: "123")
         let html = Node.videoPlayer(for: video).render()
 
-        XCTAssertEqual(html, """
+        #expect((html) == ("""
         <iframe src="https://player.vimeo.com/video/123"\
          frameborder="0"\
-         allowfullscreen="true"\
+         allowfullscreen\
          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"\
         ></iframe>
-        """)
+        """))
     }
 
-    func testRenderingMarkdownComponent() {
+    @Test func `Rendering Markdown Component`() {
         let customParser = MarkdownParser(modifiers: [
             Modifier(target: .links) { html, _ in
                 return "<b>\(html)</b>"
@@ -98,11 +100,11 @@ final class PlotComponentTests: PublishTestCase {
         }
         .render()
 
-        XCTAssertEqual(html, """
+        #expect((html) == ("""
         <div>\
         <p><a href="/first">First</a></p>\
         <div><p><b><a href="/second">Second</a></b></p></div>\
         </div>
-        """)
+        """))
     }
 }

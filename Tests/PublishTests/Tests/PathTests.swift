@@ -1,36 +1,37 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Testing
 import Publish
 import Codextended
 
 final class PathTests: PublishTestCase {
-    func testAbsoluteString() {
-        XCTAssertEqual(Path("relative").absoluteString, "/relative")
-        XCTAssertEqual(Path("/absolute").absoluteString, "/absolute")
+    @Test func `Absolute String`() {
+        #expect((Path("relative").absoluteString) == ("/relative/"))
+        #expect((Path("/absolute").absoluteString) == ("/absolute"))
     }
 
-    func testAppendingComponent() {
+    @Test func `Appending Component`() {
         let path = Path("one")
-        XCTAssertEqual(path.appendingComponent("two"), "one/two")
+        #expect((path.appendingComponent("two")) == ("one/two"))
     }
 
-    func testStringInterpolation() {
+    @Test func `String Interpolation`() {
         let path = Path("my/path")
-        XCTAssertEqual("\(path)", "my/path")
+        #expect(("\(path)") == ("my/path"))
     }
 
-    func testCoding() throws {
+    @Test func `Coding`() throws {
         struct Wrapper: Equatable, Codable {
             let path: Path
         }
 
         let wrapper = Wrapper(path: Path("my/path"))
         let data = try wrapper.encoded()
-        XCTAssertEqual(wrapper, try data.decoded())
+        #expect((wrapper) == (try data.decoded()))
     }
 }

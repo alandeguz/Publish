@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -30,7 +31,7 @@ public struct Theme<Site: Website> {
     public init<T: HTMLFactory>(
         htmlFactory factory: T,
         resourcePaths resources: Set<Path> = [],
-        file: StaticString = #file
+        file: StaticString = #filePath
     ) where T.Site == Site {
         makeIndexHTML = factory.makeIndexHTML
         makeSectionHTML = factory.makeSectionHTML

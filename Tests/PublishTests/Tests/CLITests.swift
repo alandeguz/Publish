@@ -1,16 +1,18 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Foundation
+import Testing
 import PublishCLICore
 import Files
 import ShellOut
 
 final class CLITests: PublishTestCase {
-    func testWebsiteProjectGeneration() throws {
+    @Test func `Website Project Generation`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary()
         try makeCLI(in: folder, command: "new").run(in: folder)
@@ -18,73 +20,73 @@ final class CLITests: PublishTestCase {
         #endif
     }
 
-    func testPluginProjectGeneration() throws {
+    @Test func `Plugin Project Generation`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "Name")
         try makeCLI(in: folder, command: "new", "plugin").run(in: folder)
 
-        XCTAssertTrue(folder.containsFile(at: "Sources/Name/Name.swift"))
-        XCTAssertEqual(try folder.getPackageName(), "Name")
+        #expect(folder.containsFile(at: "Sources/Name/Name.swift"))
+        #expect((try folder.getPackageName()) == ("Name"))
 
         // Make sure that the project can build
         try shellOut(to: "swift build", at: folder.path)
         #endif
     }
 
-    func testSiteName() throws {
+    @Test func `Site Name`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "Name")
         try makeCLI(in: folder, command: "new").run(in: folder)
-        XCTAssertEqual(try folder.getPackageName(), "Name")
+        #expect((try folder.getPackageName()) == ("Name"))
         #endif
     }
     
-    func testSiteNameFromLowercasedFolderName() throws {
+    @Test func `Site Name From Lowercased Folder Name`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "name")
         try makeCLI(in: folder, command: "new").run(in: folder)
-        XCTAssertEqual(try folder.getPackageName(), "Name")
+        #expect((try folder.getPackageName()) == ("Name"))
         #endif
     }
     
-    func testSiteNameFromFolderNameStartingWithDigit() throws {
+    @Test func `Site Name From Folder Name Starting With Digit`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "1-name")
         try makeCLI(in: folder, command: "new").run(in: folder)
-        XCTAssertEqual(try folder.getPackageName(), "Name")
+        #expect((try folder.getPackageName()) == ("Name"))
         #endif
     }
     
-    func testSiteNameFromCamelCaseFolderName() throws {
+    @Test func `Site Name From Camel Case Folder Name`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "CamelCaseName")
         try makeCLI(in: folder, command: "new").run(in: folder)
-        XCTAssertEqual(try folder.getPackageName(), "CamelCaseName")
+        #expect((try folder.getPackageName()) == ("CamelCaseName"))
         #endif
     }
 
-    func testSiteNameWithNonLetterValidCharactersFolderName() throws {
+    @Test func `Site Name With Non Letter Valid Characters Folder Name`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "Blog.CamelCaseName2.com")
         try makeCLI(in: folder, command: "new").run(in: folder)
-        XCTAssertEqual(try folder.getPackageName(), "BlogCamelCaseName2Com")
+        #expect((try folder.getPackageName()) == ("BlogCamelCaseName2Com"))
         #endif
     }
     
-    func testSiteNameFromFolderNameWithNonLetters() throws {
+    @Test func `Site Name From Folder Name With Non Letters`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "My website 1")
         try makeCLI(in: folder, command: "new").run(in: folder)
-        XCTAssertEqual(try folder.getPackageName(), "MyWebsite")
+        #expect((try folder.getPackageName()) == ("MyWebsite"))
         #endif
     }
     
-    func testSiteNameFromDigitsOnlyFolderName() throws {
+    @Test func `Site Name From Digits Only Folder Name`() throws {
         #if INCLUDE_CLI
         let folder = try Folder.createTemporary(named: "1")
         try makeCLI(in: folder, command: "new").run(in: folder)
         let name = try folder.getPackageName()
-        XCTAssertFalse(name.isEmpty)
+        #expect(!(name.isEmpty))
         #endif
     }
 }
@@ -116,6 +118,6 @@ private extension Folder {
     
     func getPackageName() throws -> String {
         let sourcesFolder = try subfolder(named: "Sources")
-        return try require(sourcesFolder.subfolders.first?.name)
+        return try #require(sourcesFolder.subfolders.first?.name)
     }
 }

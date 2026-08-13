@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -17,8 +18,12 @@ class WebsiteStub {
     var name = "WebsiteName"
     var description = "Description"
     var language = Language.english
+    var locale: Locale? { .init(identifier: "en_US") }
+    var themeColor: String? = nil
     var imagePath: Path? = nil
+    var twitterUsername: String? = nil
     var faviconPath: Path? = nil
+    var faviconSet: FaviconSet? = nil
     var tagHTMLConfig: TagHTMLConfiguration? = .default
 
     required init() {}

@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -22,7 +23,7 @@ internal struct MarkdownFileHandler<Site: Website> {
             }
         }
 
-        let folderResults: [FolderResult] = try await folder.subfolders.concurrentMap { subfolder in
+        let folderResults: [FolderResult] = try await folder.subfolders.asyncMap { subfolder in
             guard let sectionID = Site.SectionID(rawValue: subfolder.name.lowercased()) else {
                 return try await .pages(makePagesForMarkdownFiles(
                     inFolder: subfolder,
@@ -34,7 +35,7 @@ internal struct MarkdownFileHandler<Site: Website> {
 
             var sectionContent: Content?
             
-            let items: [Item<Site>] = try await subfolder.files.recursive.concurrentCompactMap { file in
+            let items: [Item<Site>] = try await subfolder.files.recursive.asyncCompactMap { file in
                 guard file.isMarkdown else { return nil }
 
                 if file.nameExcludingExtension == "index", file.parent == subfolder {
@@ -108,7 +109,7 @@ private extension MarkdownFileHandler {
         parentPath: Path,
         factory: MarkdownContentFactory<Site>
     ) async throws -> [Page] {
-        let pages: [Page] = try await folder.files.concurrentCompactMap { file in
+        let pages: [Page] = try await folder.files.asyncCompactMap { file in
             guard file.isMarkdown else { return nil }
 
             if file.nameExcludingExtension == "index", !recursively {
@@ -123,7 +124,7 @@ private extension MarkdownFileHandler {
             return pages
         }
 
-        return try await pages + folder.subfolders.concurrentFlatMap { subfolder -> [Page] in
+        return try await pages + folder.subfolders.asyncFlatMap { subfolder -> [Page] in
             let parentPath = parentPath.appendingComponent(subfolder.name)
 
             return try await makePagesForMarkdownFiles(

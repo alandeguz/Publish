@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -8,7 +9,7 @@ import Foundation
 
 /// Type used to express a path within a website, either to a
 /// location or to a resource, such as a file or image.
-public struct Path: StringWrapper {
+public struct Path: StringWrapper, Sendable {
     public var string: String
 
     public init(_ string: String) {

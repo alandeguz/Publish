@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -66,7 +67,7 @@ private extension RSSFeedGenerator {
             .pubDate(date, timeZone: context.dateFormatter.timeZone),
             .ttl(Int(config.ttlInterval)),
             .atomLink(context.site.url(for: config.targetPath)),
-            .group(await items.prefix(config.maximumItemCount).concurrentMap { item in
+            .group(await items.prefix(config.maximumItemCount).asyncMap { item in
                 .item(
                     .guid(for: item, site: context.site),
                     .title(item.rssTitle),

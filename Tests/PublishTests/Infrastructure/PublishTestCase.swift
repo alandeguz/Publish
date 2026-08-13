@@ -1,26 +1,29 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Testing
 import Publish
 import Plot
 import Files
 
-class PublishTestCase: XCTestCase {
+class PublishTestCase {
     @discardableResult
     func publishWebsite(
         in folder: Folder? = nil,
         using steps: [PublishingStep<WebsiteStub.WithoutItemMetadata>],
-        content: [Path : String] = [:]
-    ) throws -> PublishedWebsite<WebsiteStub.WithoutItemMetadata> {
-        try performWebsitePublishing(
+        content: [Path : String] = [:],
+        deploy: Bool? = nil
+    ) async throws -> PublishedWebsite<WebsiteStub.WithoutItemMetadata> {
+        try await performWebsitePublishing(
             in: folder,
             using: steps,
             files: content,
-            filePathPrefix: "Content/"
+            filePathPrefix: "Content/",
+            deploy: deploy
         )
     }
 
@@ -33,9 +36,9 @@ class PublishTestCase: XCTestCase {
         plugins: [Plugin<WebsiteStub.WithoutItemMetadata>] = [],
         expectedHTML: [Path : String],
         allowWhitelistedOutputFiles: Bool = true,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
-    ) throws {
+    ) async throws {
         let folder = try folder ?? Folder.createTemporary()
 
         let contentFolderName = "Content"
@@ -44,7 +47,7 @@ class PublishTestCase: XCTestCase {
         let contentFolder = try folder.createSubfolder(named: contentFolderName)
         try addFiles(withContent: content, to: contentFolder, pathPrefix: "")
 
-        try site.publish(
+        try await site.publish(
             withTheme: theme,
             at: Path(folder.path),
             rssFeedSections: [],
@@ -65,10 +68,10 @@ class PublishTestCase: XCTestCase {
         in folder: Folder? = nil,
         using steps: [PublishingStep<WebsiteStub.WithPodcastMetadata>],
         content: [Path : String] = [:],
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
-    ) throws {
-        try performWebsitePublishing(
+    ) async throws {
+        try await performWebsitePublishing(
             in: folder,
             using: steps,
             files: content,
@@ -79,7 +82,7 @@ class PublishTestCase: XCTestCase {
     func verifyOutput(in folder: Folder,
                       expectedHTML: [Path : String],
                       allowWhitelistedFiles: Bool = true,
-                      file: StaticString = #file,
+                      file: StaticString = #filePath,
                       line: UInt = #line) throws {
         let outputFolder = try folder.subfolder(named: "Output")
 
@@ -102,11 +105,8 @@ class PublishTestCase: XCTestCase {
             guard let html = expectedHTML.removeValue(forKey: relativePath) else {
                 guard allowWhitelistedFiles,
                       whitelistedPaths.contains(relativePath) else {
-                    return XCTFail(
-                        "Unexpected output file: \(relativePath)",
-                        file: file,
-                        line: line
-                    )
+                    Issue.record("Unexpected output file: \(relativePath)")
+                    return
                 }
 
                 continue
@@ -114,21 +114,14 @@ class PublishTestCase: XCTestCase {
 
             let outputHTML = try outputFile.readAsString()
 
-            XCTAssert(
-                outputHTML == html,
-                "HTML mismatch. '\(outputHTML)' is not equal to '\(html)'.",
-                file: file,
-                line: line
-            )
+            #expect(outputHTML == html, "HTML mismatch. '\(outputHTML)' is not equal to '\(html)'.")
         }
 
         let missingPaths = expectedHTML.keys.map { $0.string }
 
-        XCTAssert(
+        #expect(
             missingPaths.isEmpty,
-            "Missing output files: \(missingPaths.joined(separator: ", "))",
-            file: file,
-            line: line
+            "Missing output files: \(missingPaths.joined(separator: ", "))"
         )
     }
 
@@ -137,8 +130,8 @@ class PublishTestCase: XCTestCase {
         withItemMetadataType itemMetadataType: T.Type,
         using steps: [PublishingStep<WebsiteStub.WithItemMetadata<T>>],
         content: [Path : String] = [:]
-    ) throws -> PublishedWebsite<WebsiteStub.WithItemMetadata<T>> {
-        try performWebsitePublishing(
+    ) async throws -> PublishedWebsite<WebsiteStub.WithItemMetadata<T>> {
+        try await performWebsitePublishing(
             using: steps,
             files: content,
             filePathPrefix: "Content/"
@@ -149,8 +142,8 @@ class PublishTestCase: XCTestCase {
         in section: WebsiteStub.SectionID = .one,
         fromMarkdown markdown: String,
         fileName: String = "markdown.md"
-    ) throws -> Item<WebsiteStub.WithoutItemMetadata> {
-        let site = try publishWebsite(
+    ) async throws -> Item<WebsiteStub.WithoutItemMetadata> {
+        let site = try await publishWebsite(
             using: [
                 .addMarkdownFiles()
             ],
@@ -159,7 +152,7 @@ class PublishTestCase: XCTestCase {
             ]
         )
 
-        return try require(site.sections[section].items.first)
+        return try #require(site.sections[section].items.first)
     }
 
     func generateItem<T: WebsiteItemMetadata>(
@@ -167,8 +160,8 @@ class PublishTestCase: XCTestCase {
         in section: WebsiteStub.SectionID = .one,
         fromMarkdown markdown: String,
         fileName: String = "markdown.md"
-    ) throws -> Item<WebsiteStub.WithItemMetadata<T>> {
-        let site = try publishWebsite(
+    ) async throws -> Item<WebsiteStub.WithItemMetadata<T>> {
+        let site = try await publishWebsite(
             withItemMetadataType: T.self,
             using: [
                 .addMarkdownFiles()
@@ -178,7 +171,7 @@ class PublishTestCase: XCTestCase {
             ]
         )
 
-        return try require(site.sections[section].items.first)
+        return try #require(site.sections[section].items.first)
     }
 }
 
@@ -197,15 +190,17 @@ private extension PublishTestCase {
         in folder: Folder? = nil,
         using steps: [PublishingStep<T>],
         files: [Path : String],
-        filePathPrefix: String = ""
-    ) throws -> PublishedWebsite<T> {
+        filePathPrefix: String = "",
+        deploy: Bool? = nil
+    ) async throws -> PublishedWebsite<T> {
         let folder = try folder ?? Folder.createTemporary()
 
         try addFiles(withContent: files, to: folder, pathPrefix: filePathPrefix)
 
-        return try T().publish(
+        return try await T().publish(
             at: Path(folder.path),
-            using: steps
+            using: steps,
+            deploy: deploy
         )
     }
 }

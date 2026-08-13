@@ -1,0 +1,28 @@
+[submodule "Submodules/Ink"]
+	path = Submodules/Ink
+	url = ../Ink.git
+	branch = feature/local-submodules
+[submodule "Submodules/Plot"]
+	path = Submodules/Plot
+	url = ../Plot.git
+	branch = feature/local-submodules
+[submodule "Submodules/Files"]
+	path = Submodules/Files
+	url = ../Files.git
+	branch = feature/local-submodules
+[submodule "Submodules/Codextended"]
+	path = Submodules/Codextended
+	url = ../Codextended.git
+	branch = feature/local-submodules
+[submodule "Submodules/ShellOut"]
+	path = Submodules/ShellOut
+	url = ../ShellOut.git
+	branch = feature/local-submodules
+[submodule "Submodules/Sweep"]
+	path = Submodules/Sweep
+	url = ../Sweep.git
+	branch = feature/local-submodules
+[submodule "Submodules/CollectionConcurrencyKit"]
+	path = Submodules/CollectionConcurrencyKit
+	url = ../CollectionConcurrencyKit.git
+	branch = feature/local-submodules

@@ -16,46 +16,25 @@ let package = Package(
         .executable(name: "publish-cli", targets: ["PublishCLI"])
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/alandeguz/ink.git",
-            revision: "a6e4728023c7f291c98474f95d4fd58d12866b66"
-        ),
-        .package(
-            url: "https://github.com/alandeguz/plot.git",
-            branch: "ad09"
-        ),
-        .package(
-            url: "https://github.com/johnsundell/files.git",
-            from: "4.2.0"
-        ),
-        .package(
-            url: "https://github.com/johnsundell/codextended.git",
-            from: "0.1.0"
-        ),
-        .package(
-            url: "https://github.com/johnsundell/shellout.git",
-            from: "2.3.0"
-        ),
-        .package(
-            url: "https://github.com/alandeguz/sweep.git",
-            from: "0.5.0"
-        ),
-        .package(
-            url: "https://github.com/johnsundell/collectionConcurrencyKit.git",
-            from: "0.1.0"
-        )
+        .package(path: "Submodules/Ink"),
+        .package(path: "Submodules/Plot"),
+        .package(path: "Submodules/Files"),
+        .package(path: "Submodules/Codextended"),
+        .package(path: "Submodules/ShellOut"),
+        .package(path: "Submodules/Sweep"),
+        .package(path: "Submodules/CollectionConcurrencyKit")
     ],
     targets: [
         .target(
             name: "Publish",
             dependencies: [
-                .product(name: "Ink", package: "ink"),
-                .product(name: "Plot", package: "plot"),
-                .product(name: "Files", package: "files"),
-                .product(name: "Codextended", package: "codextended"),
-                .product(name: "ShellOut", package: "shellout"),
-                .product(name: "Sweep", package: "sweep"),
-                .product(name: "CollectionConcurrencyKit", package: "collectionconcurrencykit")
+                .product(name: "Ink", package: "Ink"),
+                .product(name: "Plot", package: "Plot"),
+                .product(name: "Files", package: "Files"),
+                .product(name: "Codextended", package: "Codextended"),
+                .product(name: "ShellOut", package: "ShellOut"),
+                .product(name: "Sweep", package: "Sweep"),
+                .product(name: "CollectionConcurrencyKit", package: "CollectionConcurrencyKit")
             ]
         ),
         .executableTarget(

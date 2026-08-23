@@ -10,8 +10,6 @@ import Plot
 import Ink
 import Sweep
 
-let iso = ISO8601DateFormatter()
-
 
 // MARK: - Nodes and Attributes
 
@@ -37,6 +35,7 @@ public extension Node where Context == HTML.DocumentContext {
         rssFeedPath: Path? = .defaultForRSSFeed,
         rssFeedTitle: String? = nil
     ) -> Node {
+        let iso = ISO8601DateFormatter()
         var title = location.title
 
         if title.isEmpty {

@@ -1,54 +1,56 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Foundation
+import Testing
 import Files
 import Ink
 import Publish
 
 final class MarkdownTests: PublishTestCase {
-    func testParsingFileWithTitle() throws {
-        let item = try generateItem(fromMarkdown: "# Title")
-        XCTAssertEqual(item.title, "Title")
+    @Test func `Parsing File With Title`() async throws {
+        let item = try await generateItem(fromMarkdown: "# Title")
+        #expect((item.title) == ("Title"))
     }
 
-    func testParsingFileWithOverriddenTitle() throws {
-        let item = try generateItem(fromMarkdown: """
+    @Test func `Parsing File With Overridden Title`() async throws {
+        let item = try await generateItem(fromMarkdown: """
         ---
         title: Overridden title
         ---
         # Title
         """)
 
-        XCTAssertEqual(item.title, "Overridden title")
+        #expect((item.title) == ("Overridden title"))
     }
 
-    func testParsingFileWithNoTitle() throws {
-        let item = try generateItem(fromMarkdown: """
+    @Test func `Parsing File With No Title`() async throws {
+        let item = try await generateItem(fromMarkdown: """
         ---
         description: A description
         ---
         No title here
         """, fileName: "fallback.md")
 
-        XCTAssertEqual(item.title, "fallback")
+        #expect((item.title) == ("fallback"))
     }
 
-    func testParsingFileWithOverriddenPath() throws {
-        let item = try generateItem(fromMarkdown: """
+    @Test func `Parsing File With Overridden Path`() async throws {
+        let item = try await generateItem(fromMarkdown: """
         ---
         path: overridden-path
         ---
         """)
 
-        XCTAssertEqual(item.path, "one/overridden-path")
+        #expect((item.path) == ("one/overridden-path"))
     }
 
-    func testParsingFileWithBuiltInMetadata() throws {
-        let item = try generateItem(fromMarkdown: """
+    @Test func `Parsing File With Built In Metadata`() async throws {
+        let item = try await generateItem(fromMarkdown: """
         ---
         description: Description
         tags: One, Two, Three
@@ -68,16 +70,16 @@ final class MarkdownTests: PublishTestCase {
         expectedDateComponents.hour = 10
         expectedDateComponents.minute = 30
 
-        XCTAssertEqual(item.description, "Description")
-        XCTAssertEqual(item.tags, ["One", "Two", "Three"])
-        XCTAssertEqual(item.imagePath, "myImage.png")
-        XCTAssertEqual(item.date, expectedDateComponents.date)
-        XCTAssertEqual(item.audio?.url, URL(string: "https://myFile.mp3"))
-        XCTAssertEqual(item.audio?.duration, Audio.Duration(hours: 1, minutes: 3, seconds: 5))
-        XCTAssertEqual(item.video, .youTube(id: "12345"))
+        #expect((item.description) == ("Description"))
+        #expect((item.tags) == (["One", "Two", "Three"]))
+        #expect((item.imagePath) == ("myImage.png"))
+        #expect((item.date) == (expectedDateComponents.date))
+        #expect((item.audio?.url) == (URL(string: "https://myFile.mp3")))
+        #expect((item.audio?.duration) == (Audio.Duration(hours: 1, minutes: 3, seconds: 5)))
+        #expect((item.video) == (.youTube(id: "12345")))
     }
 
-    func testParsingFileWithCustomMetadata() throws {
+    @Test func `Parsing File With Custom Metadata`() async throws {
         struct Metadata: WebsiteItemMetadata {
             struct Nested: WebsiteItemMetadata {
                 var string: String
@@ -94,7 +96,7 @@ final class MarkdownTests: PublishTestCase {
             var nested: Nested
         }
 
-        let item = try generateItem(
+        let item = try await generateItem(
             withMetadataType: Metadata.self,
             fromMarkdown: """
             ---
@@ -113,40 +115,40 @@ final class MarkdownTests: PublishTestCase {
 
         let expectedURLs = ["https://a.url", "https://b.url"].compactMap(URL.init)
 
-        XCTAssertEqual(item.metadata.string, "Hello, world!")
-        XCTAssertEqual(item.metadata.url, URL(string: "https://url.com"))
-        XCTAssertEqual(item.metadata.int, 42)
-        XCTAssertEqual(item.metadata.double, 3.14)
-        XCTAssertEqual(item.metadata.stringArray, ["One", "Two", "Three"])
-        XCTAssertEqual(item.metadata.urlArray, expectedURLs)
-        XCTAssertEqual(item.metadata.intArray, [1, 2, 3])
-        XCTAssertEqual(item.metadata.nested.string, "I'm nested!")
-        XCTAssertEqual(item.metadata.nested.url, URL(string: "https://nested.url"))
+        #expect((item.metadata.string) == ("Hello, world!"))
+        #expect((item.metadata.url) == (URL(string: "https://url.com")))
+        #expect((item.metadata.int) == (42))
+        #expect((item.metadata.double) == (3.14))
+        #expect((item.metadata.stringArray) == (["One", "Two", "Three"]))
+        #expect((item.metadata.urlArray) == (expectedURLs))
+        #expect((item.metadata.intArray) == ([1, 2, 3]))
+        #expect((item.metadata.nested.string) == ("I'm nested!"))
+        #expect((item.metadata.nested.url) == (URL(string: "https://nested.url")))
     }
 
-    func testParsingPageInNestedFolder() throws {
+    @Test func `Parsing Page In Nested Folder`() async throws {
         let folder = try Folder.createTemporary()
         let pageFile = try folder.createFile(at: "Content/my/custom/page.md")
         try pageFile.write("# MyPage")
 
-        let site = try publishWebsite(in: folder, using: [
+        let site = try await publishWebsite(in: folder, using: [
             .addMarkdownFiles()
         ])
 
-        XCTAssertEqual(site.pages["my/custom/page"]?.title, "MyPage")
+        #expect((site.pages["my/custom/page"]?.title) == ("MyPage"))
     }
 
-    func testNotParsingNonMarkdownFiles() throws {
+    @Test func `Not Parsing Non Markdown Files`() async throws {
         let folder = try Folder.createTemporary()
         try folder.createFile(at: "Content/image.png")
         try folder.createFile(at: "Content/one/image.png")
         try folder.createFile(at: "Content/custom/image.png")
 
-        let site = try publishWebsite(in: folder, using: [
+        let site = try await publishWebsite(in: folder, using: [
             .addMarkdownFiles()
         ])
 
-        XCTAssertEqual(site.pages, [:])
-        XCTAssertEqual(site.sections[.one].items, [])
+        #expect((site.pages) == ([:]))
+        #expect((site.sections[.one].items) == ([]))
     }
 }

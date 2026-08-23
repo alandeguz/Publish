@@ -1,30 +1,31 @@
 {
+  "originHash" : "2a4473598ba865ef119e820f97383504d52313858a479b09e4fce3d20847c23e",
   "pins" : [
     {
       "identity" : "codextended",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/codextended.git",
+      "location" : "https://github.com/alandeguz/codextended.git",
       "state" : {
-        "revision" : "8d7c46dfc9c55240870cf5561d6cefa41e3d7105",
-        "version" : "0.3.0"
+        "revision" : "0520b3d9a1a71c761c5837301b1bedbad9625f3d",
+        "version" : "0.4.0"
       }
     },
     {
       "identity" : "collectionconcurrencykit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/collectionConcurrencyKit.git",
+      "location" : "https://github.com/alandeguz/collectionConcurrencyKit.git",
       "state" : {
-        "revision" : "b4f23e24b5a1bff301efc5e70871083ca029ff95",
-        "version" : "0.2.0"
+        "revision" : "c0fe5be93f889a28b384692da6a5b7013bb519a3",
+        "version" : "0.3.0"
       }
     },
     {
       "identity" : "files",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/files.git",
+      "location" : "https://github.com/alandeguz/files.git",
       "state" : {
-        "revision" : "d273b5b7025d386feef79ef6bad7de762e106eaf",
-        "version" : "4.2.0"
+        "revision" : "2c1eb9cf249611c85ef79305af6e3fe56c8d9a40",
+        "version" : "4.4.0"
       }
     },
     {
@@ -32,7 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/ink.git",
       "state" : {
-        "revision" : "a6e4728023c7f291c98474f95d4fd58d12866b66"
+        "revision" : "ba03f5a6daaf3898933050df038a09fe43557b7e",
+        "version" : "0.6.2"
       }
     },
     {
@@ -40,17 +42,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/plot.git",
       "state" : {
-        "branch" : "ad09",
-        "revision" : "38870247622efc3cc8bd601ade3a26dfa6087642"
+        "revision" : "8f04ca95ba28fec5996dfff8d5dbce991c039c23",
+        "version" : "0.15.0"
       }
     },
     {
       "identity" : "shellout",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/shellout.git",
+      "location" : "https://github.com/alandeguz/shellout.git",
       "state" : {
-        "revision" : "e1577acf2b6e90086d01a6d5e2b8efdaae033568",
-        "version" : "2.3.0"
+        "revision" : "f683e6ca4d454b1e7e8e796d01ae05f8e8d96588",
+        "version" : "2.4.0"
       }
     },
     {
@@ -58,10 +60,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/sweep.git",
       "state" : {
-        "revision" : "e7f90cb881abb24596417227e463d4c5f82d5a5a",
-        "version" : "0.5.0"
+        "revision" : "fb166497b55dc78b6193e76638e7b3bd2a668956",
+        "version" : "0.6.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

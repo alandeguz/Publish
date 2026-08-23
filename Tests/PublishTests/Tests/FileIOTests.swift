@@ -1,118 +1,119 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Testing
 import Publish
 import Files
 
 final class FileIOTests: PublishTestCase {
-    func testCopyingFile() throws {
+    @Test func `Copying File`() async throws {
         let folder = try Folder.createTemporary()
         try folder.createFile(named: "File").write("Hello, world!")
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .copyFile(at: "File")
         ])
 
         let file = try folder.file(at: "Output/File")
-        XCTAssertEqual(try file.readAsString(), "Hello, world!")
+        #expect((try file.readAsString()) == ("Hello, world!"))
     }
 
-    func testCopyingFileToSpecificFolder() throws {
+    @Test func `Copying File To Specific Folder`() async throws {
         let folder = try Folder.createTemporary()
         try folder.createFile(named: "File").write("Hello, world!")
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .copyFile(at: "File", to: "Custom/Path")
         ])
 
         let file = try folder.file(at: "Output/Custom/Path/File")
-        XCTAssertEqual(try file.readAsString(), "Hello, world!")
+        #expect((try file.readAsString()) == ("Hello, world!"))
     }
 
-    func testCopyingFolder() throws {
+    @Test func `Copying Folder`() async throws {
         let folder = try Folder.createTemporary()
         try folder.createSubfolder(named: "Subfolder")
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .step(named: "Copy custom folder") { context in
                 try context.copyFolderToOutput(from: "Subfolder")
             }
         ])
 
-        XCTAssertNotNil(try? folder.subfolder(at: "Output/Subfolder"))
+        #expect((try? folder.subfolder(at: "Output/Subfolder")) != nil)
     }
 
-    func testCopyingResourcesWithFolder() throws {
+    @Test func `Copying Resources With Folder`() async throws {
         let folder = try Folder.createTemporary()
         let resourcesFolder = try folder.createSubfolder(named: "Resources")
         try resourcesFolder.createFile(named: "File").write("Hello")
         let nestedFolder = try resourcesFolder.createSubfolder(named: "Subfolder")
         try nestedFolder.createFile(named: "Nested").write("World!")
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .copyResources(includingFolder: true)
         ])
 
         let rootFile = try folder.file(at: "Output/Resources/File")
         let nestedFile = try folder.file(at: "Output/Resources/Subfolder/Nested")
-        XCTAssertEqual(try rootFile.readAsString(), "Hello")
-        XCTAssertEqual(try nestedFile.readAsString(), "World!")
+        #expect((try rootFile.readAsString()) == ("Hello"))
+        #expect((try nestedFile.readAsString()) == ("World!"))
     }
 
-    func testCopyingResourcesWithoutFolder() throws {
+    @Test func `Copying Resources Without Folder`() async throws {
         let folder = try Folder.createTemporary()
         let resourcesFolder = try folder.createSubfolder(named: "Resources")
         try resourcesFolder.createFile(named: "File").write("Hello")
         let nestedFolder = try resourcesFolder.createSubfolder(named: "Subfolder")
         try nestedFolder.createFile(named: "Nested").write("World!")
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .copyResources()
         ])
 
         let rootFile = try folder.file(at: "Output/File")
         let nestedFile = try folder.file(at: "Output/Subfolder/Nested")
-        XCTAssertEqual(try rootFile.readAsString(), "Hello")
-        XCTAssertEqual(try nestedFile.readAsString(), "World!")
+        #expect((try rootFile.readAsString()) == ("Hello"))
+        #expect((try nestedFile.readAsString()) == ("World!"))
     }
 
-    func testCreatingRootLevelFolder() throws {
+    @Test func `Creating Root Level Folder`() async throws {
         let folder = try Folder.createTemporary()
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .step(named: "Create folder") { context in
                 _ = try context.createFolder(at: "A")
                 _ = try context.createFile(at: "B/file")
             }
         ])
 
-        XCTAssertNotNil(try? folder.subfolder(named: "A"))
-        XCTAssertNotNil(try? folder.file(at: "B/file"))
+        #expect((try? folder.subfolder(named: "A")) != nil)
+        #expect((try? folder.file(at: "B/file")) != nil)
     }
 
-    func testRetrievingOutputFolder() throws {
+    @Test func `Retrieving Output Folder`() async throws {
         let folder = try Folder.createTemporary()
         var firstSectionFolder: Folder?
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .generateHTML(withTheme: .foundation),
             .step(named: "Get output folder") { context in
                 firstSectionFolder = try context.outputFolder(at: "one")
             }
         ])
 
-        XCTAssertEqual(firstSectionFolder?.name, "one")
+        #expect((firstSectionFolder?.name) == ("one"))
     }
 
-    func testRetrievingOutputFile() throws {
+    @Test func `Retrieving Output File`() async throws {
         let folder = try Folder.createTemporary()
         var itemFile: File?
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .addItem(.stub(withPath: "item")),
             .generateHTML(withTheme: .foundation),
             .step(named: "Get output file") { context in
@@ -120,17 +121,17 @@ final class FileIOTests: PublishTestCase {
             }
         ])
 
-        XCTAssertEqual(itemFile?.name, "index.html")
+        #expect((itemFile?.name) == ("index.html"))
     }
 
-    func testCleaningHiddenFilesInOutputFolder() throws {
+    @Test func `Cleaning Hidden Files In Output Folder`() async throws {
         let folder = try Folder.createTemporary()
         try folder.createFile(at: "Output/.hidden")
 
-        try publishWebsite(in: folder, using: [
+        try await publishWebsite(in: folder, using: [
             .step(named: "Do nothing") { _ in }
         ])
 
-        XCTAssertFalse(folder.containsFile(named: "Output/.hidden"))
+        #expect(!(folder.containsFile(named: "Output/.hidden")))
     }
 }

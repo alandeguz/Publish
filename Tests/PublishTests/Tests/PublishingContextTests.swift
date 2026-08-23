@@ -4,15 +4,15 @@
 *  MIT license, see LICENSE file for details
 */
 
-import XCTest
+import Testing
 import Publish
 
 final class PublishingContextTests: PublishTestCase {
-    func testSectionIterationOrder() throws {
+    @Test func `Section Iteration Order`() async throws {
         let expectedOrder = WebsiteStub.SectionID.allCases
         var actualOrder = [WebsiteStub.SectionID]()
 
-        try publishWebsite(using: [
+        try await publishWebsite(using: [
             .step(named: "Step") { context in
                 context.sections.forEach { section in
                     actualOrder.append(section.id)
@@ -20,6 +20,6 @@ final class PublishingContextTests: PublishTestCase {
             }
         ])
 
-        XCTAssertEqual(expectedOrder, actualOrder)
+        #expect((expectedOrder) == (actualOrder))
     }
 }

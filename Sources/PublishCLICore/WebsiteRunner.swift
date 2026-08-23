@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -20,6 +21,8 @@ internal struct WebsiteRunner {
 
         let serverQueue = DispatchQueue(label: "Publish.WebServer")
         let serverProcess = Process()
+        let portNumber = portNumber
+        let outputPath = outputFolder.path
 
         print("""
         🌍 Starting web server at http://localhost:\(portNumber)
@@ -30,14 +33,20 @@ internal struct WebsiteRunner {
         serverQueue.async {
             do {
                 _ = try shellOut(
-                    to: "python3 -m http.server \(self.portNumber)",
-                    at: outputFolder.path,
+                    to: "python3 -m http.server \(portNumber)",
+                    at: outputPath,
                     process: serverProcess
                 )
             } catch let error as ShellOutError {
-                self.outputServerErrorMessage(error.message)
+                WebsiteRunner.outputServerErrorMessage(
+                    error.message,
+                    portNumber: portNumber
+                )
             } catch {
-                self.outputServerErrorMessage(error.localizedDescription)
+                WebsiteRunner.outputServerErrorMessage(
+                    error.localizedDescription,
+                    portNumber: portNumber
+                )
             }
 
             serverProcess.terminate()
@@ -55,7 +64,10 @@ private extension WebsiteRunner {
         catch { throw CLIError.outputFolderNotFound }
     }
 
-    func outputServerErrorMessage(_ message: String) {
+    static func outputServerErrorMessage(
+        _ message: String,
+        portNumber: Int
+    ) {
         var message = message
 
         if message.hasPrefix("Traceback"),

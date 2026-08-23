@@ -1,7 +1,8 @@
-// swift-tools-version:5.7
+// swift-tools-version:6.2
 
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -18,31 +19,31 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/alandeguz/ink.git",
-            revision: "a6e4728023c7f291c98474f95d4fd58d12866b66"
+            from: "0.6.2"
         ),
         .package(
             url: "https://github.com/alandeguz/plot.git",
-            branch: "ad09"
+            from: "0.15.0"
         ),
         .package(
-            url: "https://github.com/johnsundell/files.git",
-            from: "4.2.0"
+            url: "https://github.com/alandeguz/files.git",
+            from: "4.4.0"
         ),
         .package(
-            url: "https://github.com/johnsundell/codextended.git",
-            from: "0.1.0"
+            url: "https://github.com/alandeguz/codextended.git",
+            from: "0.4.0"
         ),
         .package(
-            url: "https://github.com/johnsundell/shellout.git",
-            from: "2.3.0"
+            url: "https://github.com/alandeguz/shellout.git",
+            from: "2.4.0"
         ),
         .package(
             url: "https://github.com/alandeguz/sweep.git",
-            from: "0.5.0"
+            from: "0.6.0"
         ),
         .package(
-            url: "https://github.com/johnsundell/collectionConcurrencyKit.git",
-            from: "0.1.0"
+            url: "https://github.com/alandeguz/collectionConcurrencyKit.git",
+            from: "0.2.0"
         )
     ],
     targets: [

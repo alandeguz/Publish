@@ -1,5 +1,6 @@
 /**
 *  Publish
+*  Copyright (c) Alan DeGuzman 2026
 *  Copyright (c) John Sundell 2019
 *  MIT license, see LICENSE file for details
 */
@@ -13,6 +14,7 @@ import Cocoa
 internal struct PublishingPipeline<Site: Website> {
     let steps: [PublishingStep<Site>]
     let originFilePath: Path
+    let deploy: Bool?
 }
 
 extension PublishingPipeline {
@@ -134,7 +136,7 @@ private extension PublishingPipeline {
 
     func resolveStepKind() -> Step.Kind {
         let deploymentFlags: Set<String> = ["--deploy", "-d"]
-        let shouldDeploy = CommandLine.arguments.contains(where: deploymentFlags.contains)
+        let shouldDeploy = deploy ?? CommandLine.arguments.contains(where: deploymentFlags.contains)
         return shouldDeploy ? .deployment : .generation
     }
 

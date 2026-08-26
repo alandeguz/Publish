@@ -409,7 +409,7 @@ public extension PublishingStep {
         including includedSectionIDs: Set<Site.SectionID>,
         itemPredicate: Predicate<Item<Site>>? = nil,
         config: RSSFeedConfiguration = .default,
-        date: Date = Date()
+        date: Date = Constants.today
     ) -> Self {
         guard !includedSectionIDs.isEmpty else { return .empty }
 
@@ -459,7 +459,7 @@ public extension PublishingStep where Site.ItemMetadata: PodcastCompatibleWebsit
         for section: Site.SectionID,
         itemPredicate: Predicate<Item<Site>>? = nil,
         config: PodcastFeedConfiguration<Site>,
-        date: Date = Date()
+        date: Date = Constants.today
     ) -> Self {
         step(named: "Generate podcast feed") { context in
             let generator = PodcastFeedGenerator(

@@ -19,31 +19,31 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/alandeguz/ink.git",
-            from: "0.6.2"
+            branch: "master"
         ),
         .package(
             url: "https://github.com/alandeguz/plot.git",
-            from: "0.15.0"
+            branch: "master"
         ),
         .package(
             url: "https://github.com/alandeguz/files.git",
-            from: "4.4.0"
+            branch: "master"
         ),
         .package(
             url: "https://github.com/alandeguz/codextended.git",
-            from: "0.4.0"
+            branch: "master"
         ),
         .package(
             url: "https://github.com/alandeguz/shellout.git",
-            from: "2.4.0"
+            branch: "master"
         ),
         .package(
             url: "https://github.com/alandeguz/sweep.git",
-            from: "0.6.0"
+            branch: "main"
         ),
         .package(
             url: "https://github.com/alandeguz/collectionConcurrencyKit.git",
-            from: "0.2.0"
+            branch: "main"
         )
     ],
     targets: [

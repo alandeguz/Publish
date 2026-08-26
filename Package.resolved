@@ -1,13 +1,13 @@
 {
-  "originHash" : "2a4473598ba865ef119e820f97383504d52313858a479b09e4fce3d20847c23e",
+  "originHash" : "5ca6139fd698a1838892093ed5ecd0ff1f500f025b1ffdc141fdd14fc476a789",
   "pins" : [
     {
       "identity" : "codextended",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/codextended.git",
       "state" : {
-        "revision" : "0520b3d9a1a71c761c5837301b1bedbad9625f3d",
-        "version" : "0.4.0"
+        "branch" : "master",
+        "revision" : "0520b3d9a1a71c761c5837301b1bedbad9625f3d"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/collectionConcurrencyKit.git",
       "state" : {
-        "revision" : "c0fe5be93f889a28b384692da6a5b7013bb519a3",
-        "version" : "0.3.0"
+        "branch" : "main",
+        "revision" : "c0fe5be93f889a28b384692da6a5b7013bb519a3"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/files.git",
       "state" : {
-        "revision" : "2c1eb9cf249611c85ef79305af6e3fe56c8d9a40",
-        "version" : "4.4.0"
+        "branch" : "master",
+        "revision" : "cff3845fb983b18eb00801b526a95d2a26adfd6e"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/ink.git",
       "state" : {
-        "revision" : "ba03f5a6daaf3898933050df038a09fe43557b7e",
-        "version" : "0.6.2"
+        "branch" : "master",
+        "revision" : "ba03f5a6daaf3898933050df038a09fe43557b7e"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/plot.git",
       "state" : {
-        "revision" : "8f04ca95ba28fec5996dfff8d5dbce991c039c23",
-        "version" : "0.15.0"
+        "branch" : "master",
+        "revision" : "8f04ca95ba28fec5996dfff8d5dbce991c039c23"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/shellout.git",
       "state" : {
-        "revision" : "f683e6ca4d454b1e7e8e796d01ae05f8e8d96588",
-        "version" : "2.4.0"
+        "branch" : "master",
+        "revision" : "f683e6ca4d454b1e7e8e796d01ae05f8e8d96588"
       }
     },
     {
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alandeguz/sweep.git",
       "state" : {
-        "revision" : "fb166497b55dc78b6193e76638e7b3bd2a668956",
-        "version" : "0.6.0"
+        "branch" : "main",
+        "revision" : "fb166497b55dc78b6193e76638e7b3bd2a668956"
       }
     }
   ],

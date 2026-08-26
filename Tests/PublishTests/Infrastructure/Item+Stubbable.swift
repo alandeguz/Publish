@@ -8,7 +8,6 @@ import Foundation
 import Publish
 
 extension Item: Stubbable where Site == WebsiteStub.WithoutItemMetadata {
-    private static let defaultDate = Date()
 
     static func stub(withPath path: Path) -> Self {
         Item(
@@ -17,8 +16,8 @@ extension Item: Stubbable where Site == WebsiteStub.WithoutItemMetadata {
             metadata: Site.ItemMetadata(),
             tags: [],
             content: Content(
-                date: defaultDate,
-                lastModified: defaultDate
+                date: Constants.today,
+                lastModified: Constants.today
             )
         )
     }
@@ -34,8 +33,8 @@ extension Item: Stubbable where Site == WebsiteStub.WithoutItemMetadata {
             metadata: Site.ItemMetadata(),
             tags: [],
             content: Content(
-                date: defaultDate,
-                lastModified: defaultDate
+                date: Constants.today,
+                lastModified: Constants.today
             )
         )
     }

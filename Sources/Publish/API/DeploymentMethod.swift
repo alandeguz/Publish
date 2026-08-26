@@ -69,7 +69,7 @@ public extension DeploymentMethod {
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-            let dateString = dateFormatter.string(from: Date())
+            let dateString = dateFormatter.string(from: Constants.today)
 
             do {
                 try shellOut(

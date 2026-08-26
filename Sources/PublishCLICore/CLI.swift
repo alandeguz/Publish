@@ -21,7 +21,11 @@ public struct CLI {
         self.publishVersion = publishVersion
     }
 
-    public func run(in folder: Folder = .current) throws {
+    public func run() throws {
+        try run(in: .current)
+    }
+
+    public func run(in folder: Folder) throws {
         guard arguments.count > 1 else {
             return outputHelpText()
         }

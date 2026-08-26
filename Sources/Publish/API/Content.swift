@@ -30,8 +30,8 @@ public struct Content: Hashable, ContentProtocol {
     public init(title: String = "",
                 description: String = "",
                 body: Body = Body(html: ""),
-                date: Date = Date(),
-                lastModified: Date = Date(),
+                date: Date = Constants.today,
+                lastModified: Date = Constants.today,
                 imagePath: Path? = nil,
                 audio: Audio? = nil,
                 video: Video? = nil) {

@@ -127,7 +127,7 @@ final class PodcastFeedGenerationTests: PublishTestCase {
     @Test func `Not Reusing Previous Feed If Item Was Added`() async throws {
         let folder = try Folder.createTemporary()
 
-        let audio = try Audio(
+        let audio = Audio(
             url: try #require(URL(string: "https://audio.mp3")),
             duration: Audio.Duration(),
             byteSize: 55

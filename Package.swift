@@ -50,13 +50,13 @@ let package = Package(
         .target(
             name: "Publish",
             dependencies: [
-                .product(name: "Ink", package: "ink"),
-                .product(name: "Plot", package: "plot"),
-                .product(name: "Files", package: "files"),
-                .product(name: "Codextended", package: "codextended"),
-                .product(name: "ShellOut", package: "shellout"),
-                .product(name: "Sweep", package: "sweep"),
-                .product(name: "CollectionConcurrencyKit", package: "collectionconcurrencykit")
+                .product(name: "Ink", package: "Ink"),
+                .product(name: "Plot", package: "Plot"),
+                .product(name: "Files", package: "Files"),
+                .product(name: "Codextended", package: "Codextended"),
+                .product(name: "ShellOut", package: "ShellOut"),
+                .product(name: "Sweep", package: "Sweep"),
+                .product(name: "CollectionConcurrencyKit", package: "CollectionConcurrencyKit")
             ]
         ),
         .executableTarget(

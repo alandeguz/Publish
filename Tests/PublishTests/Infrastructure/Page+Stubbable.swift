@@ -13,8 +13,8 @@ extension Page: Stubbable {
         Page(
             path: path,
             content: Content(
-                date: Constants.today,
-                lastModified: Constants.today
+                date: PublishConstants.today,
+                lastModified: PublishConstants.today
             )
         )
     }

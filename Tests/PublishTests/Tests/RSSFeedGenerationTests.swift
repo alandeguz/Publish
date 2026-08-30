@@ -126,7 +126,7 @@ final class RSSFeedGenerationTests: PublishTestCase {
         try await generateFeed(in: folder)
         let feedA = try folder.file(at: "Output/feed.rss").readAsString()
 
-        let newDate = Constants.today.addingTimeInterval(60 * 60)
+        let newDate = PublishConstants.today.addingTimeInterval(60 * 60)
         try await generateFeed(in: folder, date: newDate)
         let feedB = try folder.file(at: "Output/feed.rss").readAsString()
 
@@ -147,7 +147,7 @@ final class RSSFeedGenerationTests: PublishTestCase {
         let feedA = try folder.file(at: "Output/feed.rss").readAsString()
 
         let newConfig = RSSFeedConfiguration(ttlInterval: 5000)
-        let newDate = Constants.today.addingTimeInterval(60 * 60)
+        let newDate = PublishConstants.today.addingTimeInterval(60 * 60)
         try await generateFeed(in: folder, config: newConfig, date: newDate)
         let feedB = try folder.file(at: "Output/feed.rss").readAsString()
 
@@ -185,7 +185,7 @@ private extension RSSFeedGenerationTests {
         generationSteps: [PublishingStep<Site>] = [
             .addMarkdownFiles()
         ],
-        date: Date = Constants.today,
+        date: Date = PublishConstants.today,
         content: [Path : String] = [:]
     ) async throws {
         try await publishWebsite(in: folder, using: [

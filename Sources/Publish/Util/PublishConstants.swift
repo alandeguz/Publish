@@ -6,7 +6,7 @@
 
 import Foundation
 
-public enum Constants {
+public enum PublishConstants {
     
     public static let today = Date()
     

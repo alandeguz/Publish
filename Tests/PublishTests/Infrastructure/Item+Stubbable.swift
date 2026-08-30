@@ -16,8 +16,8 @@ extension Item: Stubbable where Site == WebsiteStub.WithoutItemMetadata {
             metadata: Site.ItemMetadata(),
             tags: [],
             content: Content(
-                date: Constants.today,
-                lastModified: Constants.today
+                date: PublishConstants.today,
+                lastModified: PublishConstants.today
             )
         )
     }
@@ -33,8 +33,8 @@ extension Item: Stubbable where Site == WebsiteStub.WithoutItemMetadata {
             metadata: Site.ItemMetadata(),
             tags: [],
             content: Content(
-                date: Constants.today,
-                lastModified: Constants.today
+                date: PublishConstants.today,
+                lastModified: PublishConstants.today
             )
         )
     }

@@ -6,8 +6,9 @@
 
 import Foundation
 
-public enum Constants {
+public enum PublishConstants {
     
     public static let today = Date()
+    public static let hostName = ProcessInfo.processInfo.hostName
     
 }

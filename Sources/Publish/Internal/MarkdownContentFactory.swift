@@ -86,6 +86,6 @@ private extension MarkdownContentFactory {
             return date
         }
 
-        return file.modificationDate ?? Constants.today
+        return file.modificationDate ?? PublishConstants.today
     }
 }

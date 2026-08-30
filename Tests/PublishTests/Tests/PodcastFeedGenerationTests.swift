@@ -94,7 +94,7 @@ final class PodcastFeedGenerationTests: PublishTestCase {
         try await generateFeed(in: folder)
         let feedA = try folder.file(at: "Output/feed.rss").readAsString()
 
-        let newDate = Constants.today.addingTimeInterval(60 * 60)
+        let newDate = PublishConstants.today.addingTimeInterval(60 * 60)
         try await generateFeed(in: folder, date: newDate)
         let feedB = try folder.file(at: "Output/feed.rss").readAsString()
 
@@ -117,7 +117,7 @@ final class PodcastFeedGenerationTests: PublishTestCase {
 
         var newConfig = try makeConfigStub()
         newConfig.author.name = "New author name"
-        let newDate = Constants.today.addingTimeInterval(60 * 60)
+        let newDate = PublishConstants.today.addingTimeInterval(60 * 60)
         try await generateFeed(in: folder, config: newConfig, date: newDate)
         let feedB = try folder.file(at: "Output/feed.rss").readAsString()
 
@@ -203,7 +203,7 @@ private extension PodcastFeedGenerationTests {
         generationSteps: [PublishingStep<Site>] = [
             .addMarkdownFiles()
         ],
-        date: Date = Constants.today,
+        date: Date = PublishConstants.today,
         content: [Path : String] = [:]
     ) async throws {
         try await publishWebsiteWithPodcast(in: folder, using: [

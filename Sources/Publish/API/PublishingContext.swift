@@ -326,7 +326,7 @@ private extension PublishingContext {
 
     mutating func updateLastGenerationDate() throws {
         let fileName = "lastGenerationDate"
-        let newString = String(Date().timeIntervalSince1970)
+        let newString = String(PublishConstants.today.timeIntervalSince1970)
 
         if let file = try? folders.internal.file(named: fileName) {
             let oldInterval = try TimeInterval(file.readAsString())
